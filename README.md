@@ -22,22 +22,26 @@ Have students take some time to find other cool APIs and share with the class.
 Show students that APIs are just HTML requests by submitting a get request in the browser and showing them the big jumble of JSON that is received.
 
 ### Step 2: Create A Python File 
-We're not going to be submitting our requests from the browser. Instead, we're going to do this programmatically. To do this, we need to install the 'requests' package using `pip install requests`. 
+We're not going to be submitting our requests from the browser. Instead, we're going to do this programmatically. 
+
+
+To do this, we need to install the 'requests' package using `pip install requests`. 
 Create a new .py file called giphy_search.py and import the requests package.
 
 ```python
-import requests
+from google.appengine.api import urlfetch
+import json
 
 search_term = raw_input("Search term:").replace(' ', '+')
 url = "http://api.giphy.com/v1/gifs/search?q={}&api_key=dc6zaTOxFJmzC&limit=10".format(search_term)
 
-resp = requests.get(url)
+resp = urlfetch.fetch(url)
 
 if resp.status_code != 200:
     # This means something went wrong.
     raise ApiError('resp.status_code')
 
-for gif in resp.json()["data"]:
+for gif in json.loads(resp.content)["data"]:
     print('{} {}'.format(gif['slug'], gif['url']))
 ```
 
